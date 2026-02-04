@@ -1,37 +1,51 @@
-# [Nazwa Projektu]
+# LD-Lab
 
 [![KN Algo](https://img.shields.io/badge/Made%20by-KN%20Algo-000424?style=flat-square&logo=cplusplus)](https://algo.pwr.edu.pl/)
 [![PWr](https://img.shields.io/badge/Affiliation-PWr-red?style=flat-square)](https://pwr.edu.pl/)
 [![License](https://img.shields.io/badge/License-GPLv3-purple?style=flat-square)](./LICENSE)
 [![Status](https://img.shields.io/badge/Status-Development-orange?style=flat-square)]()
 
-> Krótkie, jednozdaniowe podsumowanie tego, co robi ten projekt (np. "Implementacja algorytmu mrówkowego do problemu komiwojażera").
+> Symulator języka drabinkowego (ang. Ladder Diagram, LD).
 
 ## 📋 O projekcie
+Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska do nauki programowania sterowników PLC, bez konieczności posiadania fizycznego sterownika.
 
-Tutaj opisz szczegółowo cel projektu.
-* **Problem:** Jaki problem rozwiązujecie?
-* **Rozwiązanie:** Jakie podejście zastosowaliście?
-* **Cel:** Czy to projekt na konkurs, pracę dyplomową, hackathon, czy grant rektora?
+* **Problem:** Nauka programowania PLC często wiąże się z brakiem dostępu do sprzętu oraz brakiem modularności i wygody w darmowych narzędziach, co utrudnia zrozumienie zaawansowanych pojęć.
+* **Cel:** Stworzenie w pełni funkcjonalnego i elastycznego środowiska edukacyjnego, umożliwiającego budowę złożonych algorytmów oraz monitorowanie wartości zmiennych w czasie.
 
-Jeśli projekt opiera się na konkretnej publikacji naukowej, warto ją tutaj zacytować.
 
 ### 🚀 Funkcjonalności
-* [ ] Funkcjonalność 1
-* [ ] Funkcjonalność 2
-* [ ] Wizualizacja wyników
+#### Iteracja 1: Bare Minimum (Fundamenty) 
+* [ ] **Obsługa podstawowych styków i cewek**: Implementacja wejść/wyjść Normalnie Otwartych (NO), Normalnie Zamkniętych (NC) oraz instrukcji Set i Reset.
+* [ ] **System zmiennych**: Obsługa typów logicznych (BOOL) oraz liczbowych (INT), reprezentujących również sygnały analogowe.
+* [ ] **Moduły liczników**: Zliczanie zdarzeń w górę (CTU), w dół (CTD) oraz dwukierunkowo.
+* [ ] **Mechanizmy czasowe**: Implementacja timerów z opóźnionym załączeniem (Timer ON) i wyłączeniem (Timer OFF).
+* [ ] **Logika i porównania**: Obsługa komparatorów (równe, większe, mniejsze), operatorów (AND, OR) oraz detekcji zboczy sygnału.
 
-## 🛠 Technologie
+#### Iteracja 2: Rozszerzenie i Diagnostyka 
+* [ ] **Dokumentacja kodu**: Możliwość dodawania komentarzy do poszczególnych szczebli (rungów) oraz bloków funkcyjnych.
+* [ ] **Manipulacja danymi**: Wprowadzenie rejestrów blokowych, instrukcji przesyłania danych (MOVE) oraz operacji matematycznych (ABS, MOD, MAX, MIN).
+* [ ] **Operacje bitowe**: Bezpośrednia manipulacja bitami w rejestrach poprzez przesuwanie w lewo i w prawo.
+* [ ] **Wizualizacja i monitoring**: Śledzenie zmian wartości zmiennych analogowych w czasie rzeczywistym.
 
-Wymień główne języki i biblioteki.
+
+#### Iteracja 3: Modularność i Abstrakcja 
+* [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
+* [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
+
+#### Iteracja 4: Zaawansowana Automatyka 
+
+* [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
+<!--
+## 🛠 Technologie.
+ Wymień główne języki i biblioteki.
 
 * **Język:** Python 3.9 / C++17 / Java
 * **Biblioteki:** NumPy, Pandas, SFML, OpenCV
-* **Narzędzia:** Docker, CMake
-
+* **Narzędzia:** Docker, CMake -->
+<!--
 ## 💻 Jak uruchomić (Getting Started)
-
-Instrukcja krok po kroku, jak uruchomić projekt lokalnie.
+ Instrukcja krok po kroku, jak uruchomić projekt lokalnie.
 
 ### Wymagania wstępne
 Co użytkownik musi mieć zainstalowane?
@@ -58,9 +72,9 @@ Przykładowe komenda do uruchomienia głównego skryptu:
 
 ```bash
 python main.py --input data/input.txt
-```
+``` -->
 
-## 🧠 Teoria i Algorytmy (Opcjonalne)
+<!-- ## 🧠 Teoria i Algorytmy (Opcjonalne)
 
 Jeśli projekt jest algorytmiczny, opisz:
 
@@ -68,18 +82,18 @@ Jeśli projekt jest algorytmiczny, opisz:
   * Złożoność obliczeniową (np. $`O(n \log n)`$).
   * Strukturę danych.
 
-Możesz dodać pseudokod lub diagramy.
+Możesz dodać pseudokod lub diagramy. -->
 
-## 📊 Przykładowe wyniki
+<!-- ## 📊 Przykładowe wyniki
 
-Jeden obraz znaczy więcej niż 1000 słów. Wstaw tutaj zrzut ekranu aplikacji, wykres wydajności lub GIF z działania algorytmu.
+Jeden obraz znaczy więcej niż 1000 słów. Wstaw tutaj zrzut ekranu aplikacji, wykres wydajności lub GIF z działania algorytmu. -->
 
 ## 🤝 Twórcy
 
 Projekt realizowany przez członków **KN Algo** przy Politechnice Wrocławskiej:
 
-  * **[Imię Nazwisko](https://www.google.com/search?q=link_do_githuba)** - Rola (np. Lead Developer)
-  * **[Imię Nazwisko](https://www.google.com/search?q=link_do_githuba)** - Rola (np. Research, Documentation)
+  * **[Bartłomiej Kuk](https://github.com/PEXEL2002)** - Team Leader, Pomysłodawca projektu
+  * **[Wiktor Jankowski-Ostrowski](https://github.com/WiktorPWR)** - Wsparcie merytoryczne, autor dokumentacji wymagań
 
 -----
 
