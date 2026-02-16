@@ -36,6 +36,10 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 #### Iteracja 4: Zaawansowana Automatyka 
 
 * [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
+
+
+## 💻 Jak uruchomić (Getting Started)
+Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project%20Setup/README.md)
 <!--
 ## 🛠 Technologie.
  Wymień główne języki i biblioteki.
@@ -93,6 +97,7 @@ Jeden obraz znaczy więcej niż 1000 słów. Wstaw tutaj zrzut ekranu aplikacji,
 Projekt realizowany przez członków **KN Algo** przy Politechnice Wrocławskiej:
 
   * **[Bartłomiej Kuk](https://github.com/PEXEL2002)** - Team Leader, Pomysłodawca projektu
+  * **[Adrian Goral](https://github.com/xEdziu)** - Integracja frontendu z backendem, tester i wsparcie programistów
   * **[Wiktor Jankowski-Ostrowski](https://github.com/WiktorPWR)** - Wsparcie merytoryczne, autor dokumentacji wymagań
 
 -----
