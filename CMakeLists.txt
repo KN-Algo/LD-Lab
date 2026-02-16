@@ -37,7 +37,7 @@ include(FetchContent)
 FetchContent_Declare(
     saucer
     GIT_REPOSITORY https://github.com/saucer/saucer
-    GIT_TAG v8.0.0
+    GIT_TAG v8.0.4
 )
 FetchContent_MakeAvailable(saucer)
 
