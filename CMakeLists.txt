@@ -33,8 +33,11 @@ target_link_libraries(${PROJECT_NAME}
 
 # === Windows Setup ===
 if(WIN32)
-    # Ukrywa konsolę tylko w trybie Release (nie w Debug)
+    # 1. Ukrywa konsolę w trybie Release (ustawia /SUBSYSTEM:WINDOWS)
     set_target_properties(${PROJECT_NAME} PROPERTIES 
         WIN32_EXECUTABLE $<CONFIG:Release>
     )
+
+    # 2. FIX: Mówi linkerowi, żeby w trybie Release nadal używał 'main()' zamiast szukać 'WinMain'
+    target_link_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:Release>:/ENTRY:mainCRTStartup>")
 endif()
