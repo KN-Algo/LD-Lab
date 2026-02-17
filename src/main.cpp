@@ -22,7 +22,7 @@ coco::stray start(saucer::application *app)
 #ifdef NDEBUG
     // Tryb RELEASE (spakowany plik)
     webview->embed(saucer::embedded::all());
-    webview->serve("index.html");
+    webview->serve("/index.html");
 #else
     // Tryb DEBUG (Hot Reload z Vite)
     webview->set_url("http://localhost:5173");
