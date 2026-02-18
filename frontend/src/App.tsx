@@ -2,7 +2,7 @@ import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { call } from "@saucer-dev/types";
 import { useState } from "react";
 
-// Prosty komponent Shadcn-like (button)
+// KOMPONENT PRZYKŁADOWY - NIE JEST TO KOD, KTÓRY POWINIEN BYĆ APLIKACJI
 const Button = ({
   children,
   onClick,
@@ -20,6 +20,8 @@ const Button = ({
 
 function Home() {
   const [msg, setMsg] = useState("Brak");
+  const [addResult, setAddResult] = useState<number | null>(null);
+  const [sumResult, setSumResult] = useState<number | null>(null);
 
   const getCppData = async () => {
     try {
@@ -30,17 +32,58 @@ function Home() {
     }
   };
 
+  const testAddNumbers = async () => {
+    try {
+      const res = await call<number>("add_numbers", [5, 10]);
+      setAddResult(res);
+    } catch {
+      setAddResult(null);
+    }
+  };
+
+  const testAddMany = async () => {
+    try {
+      const res = await call<number>("add_many", [[1, 45, 34, 29]]);
+      setSumResult(res);
+    } catch {
+      setSumResult(null);
+    }
+  };
+
+  // TEN PONIŻSZY KOD JEST KODEM TYLKO DO ZAPREZENTOWANIA DZIAŁANIA SAUCERA - NIE JEST TO KOD, KTÓRY POWINIEN BYĆ APLIKACJI
+
   return (
     <div className="p-10 space-y-4">
       <h1 className="text-3xl font-bold text-slate-800">Strona Główna</h1>
-      <p className="text-slate-600">TW REACT WRAZ Z SAUCEREM.</p>
+      <p className="text-slate-600">POC React + Saucer</p>
 
       <div className="border p-4 rounded bg-slate-100">
+        <p className="font-semibold mb-2">Test Greeter:</p>
         <p>
           Dane z C++: <strong>{msg}</strong>
         </p>
         <div className="mt-2">
           <Button onClick={getCppData}>Pobierz dane</Button>
+        </div>
+      </div>
+
+      <div className="border p-4 rounded bg-slate-100">
+        <p className="font-semibold mb-2">Test Adder - Dwie liczby:</p>
+        <p>
+          5 + 10 = <strong>{addResult !== null ? addResult : "?"}</strong>
+        </p>
+        <div className="mt-2">
+          <Button onClick={testAddNumbers}>Dodaj 5 + 10</Button>
+        </div>
+      </div>
+
+      <div className="border p-4 rounded bg-slate-100">
+        <p className="font-semibold mb-2">Test Adder - Wiele liczb:</p>
+        <p>
+          [1, 45, 34, 29] = <strong>{sumResult !== null ? sumResult : "?"}</strong>
+        </p>
+        <div className="mt-2">
+          <Button onClick={testAddMany}>Dodaj tablicę</Button>
         </div>
       </div>
 

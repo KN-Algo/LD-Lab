@@ -53,7 +53,7 @@ Projekt opiera się na architekturze hybrydowej, łączącej wydajność natywn�
 - **CMake** (do budowania projektu i zarządzania zależnościami)
 
 ## 💻 Jak uruchomić (Getting Started)
-Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project%20Setup/README.md)
+Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project-Setup/README.md)
 <!--
 ## 🛠 Technologie.
  Wymień główne języki i biblioteki.

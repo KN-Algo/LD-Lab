@@ -18,18 +18,19 @@ Aby pracować nad projektem, potrzebujesz następujących narzędzi:
 * Zalecane rozszerzenie: **CMake Tools** (Microsoft).
 * Zalecane rozszerzenie: **C/C++** (Microsoft).
 
-3. **Node.js** (v20+): Do obsługi Reacta i Vite.
-4. **CMake** (zazwyczaj instaluje się z VS, ale warto mieć w systemie).
+3. **Node.js** w wersji >=24
+4. **CMake** w wersji >=3.25 (zazwyczaj instaluje się z VS, ale warto mieć w systemie).
 
 > **Ważne:** Projekt wymaga standardu **C++23**. Starsze kompilatory nie zadziałają.
 
-### Linux
+### Linux / MacOs
 
-TODO: Zweryfikować co ma zostać pobrane wcześniej i jak wygląda proces kompilacji
-
-### MacOs
-
-TODO: Zweryfikować co ma zostać pobrane wcześniej i jak wygląda proces kompilacji
+- **Visual Studio Code**:
+    * Zalecane rozszerzenie: **CMake Tools** (Microsoft).
+    * Zalecane rozszerzenie: **C/C++** (Microsoft).
+- **G++14**
+- **CMake** w wersji >=3.25
+- **Node.js** w wersji >=24
 
 ---
 
