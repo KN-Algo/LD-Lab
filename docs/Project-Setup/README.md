@@ -100,44 +100,6 @@ npm run build
 
 Gotowy plik `LD-Lab.exe` znajdziesz w folderze `build/Release/` (lub `build/`).
 
----
-
-## Architektura
-
-### 1. Mostek C++ <-> React
-
-Komunikacja odbywa się dwukierunkowo.
-
-**C++ (main.cpp):**
-
-```cpp
-// Wystawienie funkcji dla JS
-webview->expose("hello_from_cpp", []() {
-    return "Wiadomość z backendu!";
-});
-```
-
-**React (App.tsx):**
-
-```typescript
-import { call } from "@saucer-dev/types";
-
-const getData = async () => {
-    // Drugi argument [] jest wymagany przez TypeScript
-    const result = await call<string>("hello_from_cpp", []);
-    console.log(result);
-};
-```
-
-### 2. Mechanizm Embeddingu
-
-W pliku `CMakeLists.txt` funkcja `saucer_embed` pakuje zawartość `frontend/dist` do nagłówków C++.
-
-* W trybie **Debug** (`#else` w `main.cpp`): Aplikacja ignoruje embedded files i łączy się z localhost.
-* W trybie **Release** (`#ifdef NDEBUG`): Aplikacja serwuje pliki bezpośrednio z pamięci RAM (`saucer::embedded::all()`).
-
----
-
 ## 📝 .gitignore
 
 Pamiętaj, aby nie commitować folderów budowania:
