@@ -60,9 +60,9 @@ endif()
 # ==========================================
 # 6. Linkowanie
 # ==========================================
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE 
-    saucer::saucer 
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+    saucer::saucer
     saucer::embedded
 )
 
@@ -73,7 +73,7 @@ target_link_libraries(${PROJECT_NAME}
 # [WINDOWS] - Specyficzne flagi linkera
 if(WIN32)
     # Ukrywa czarną konsolę TYLKO w trybie Release
-    set_target_properties(${PROJECT_NAME} PROPERTIES 
+    set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE $<CONFIG:Release>
     )
 

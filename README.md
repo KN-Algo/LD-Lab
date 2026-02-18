@@ -15,25 +15,25 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 
 
 ### 🚀 Funkcjonalności
-#### Iteracja 1: Bare Minimum (Fundamenty) 
+#### Iteracja 1: Bare Minimum (Fundamenty)
 * [ ] **Obsługa podstawowych styków i cewek**: Implementacja wejść/wyjść Normalnie Otwartych (NO), Normalnie Zamkniętych (NC) oraz instrukcji Set i Reset.
 * [ ] **System zmiennych**: Obsługa typów logicznych (BOOL) oraz liczbowych (INT), reprezentujących również sygnały analogowe.
 * [ ] **Moduły liczników**: Zliczanie zdarzeń w górę (CTU), w dół (CTD) oraz dwukierunkowo.
 * [ ] **Mechanizmy czasowe**: Implementacja timerów z opóźnionym załączeniem (Timer ON) i wyłączeniem (Timer OFF).
 * [ ] **Logika i porównania**: Obsługa komparatorów (równe, większe, mniejsze), operatorów (AND, OR) oraz detekcji zboczy sygnału.
 
-#### Iteracja 2: Rozszerzenie i Diagnostyka 
+#### Iteracja 2: Rozszerzenie i Diagnostyka
 * [ ] **Dokumentacja kodu**: Możliwość dodawania komentarzy do poszczególnych szczebli (rungów) oraz bloków funkcyjnych.
 * [ ] **Manipulacja danymi**: Wprowadzenie rejestrów blokowych, instrukcji przesyłania danych (MOVE) oraz operacji matematycznych (ABS, MOD, MAX, MIN).
 * [ ] **Operacje bitowe**: Bezpośrednia manipulacja bitami w rejestrach poprzez przesuwanie w lewo i w prawo.
 * [ ] **Wizualizacja i monitoring**: Śledzenie zmian wartości zmiennych analogowych w czasie rzeczywistym.
 
 
-#### Iteracja 3: Modularność i Abstrakcja 
+#### Iteracja 3: Modularność i Abstrakcja
 * [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
 * [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
 
-#### Iteracja 4: Zaawansowana Automatyka 
+#### Iteracja 4: Zaawansowana Automatyka
 
 * [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
 

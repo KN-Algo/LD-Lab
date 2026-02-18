@@ -4,7 +4,7 @@ out/
 bin/
 cmake-build-*/
 # To jest ten folder z wygenerowanymi nagłówkami C++ dla Reacta:
-embedded/ 
+embedded/
 
 # === Pliki tymczasowe Visual Studio & CMake ===
 .vs/
