@@ -28,14 +28,13 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 * [ ] **Operacje bitowe**: Bezpośrednia manipulacja bitami w rejestrach poprzez przesuwanie w lewo i w prawo.
 * [ ] **Wizualizacja i monitoring**: Śledzenie zmian wartości zmiennych analogowych w czasie rzeczywistym.
 
-
-#### Iteracja 3: Modularność i Abstrakcja 
-* [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
-* [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
-
-#### Iteracja 4: Zaawansowana Automatyka 
+#### Iteracja 3: Zaawansowana Automatyka 
 
 * [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
+
+#### Iteracja 4: Modularność i Abstrakcja 
+* [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
+* [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
 <!--
 ## 🛠 Technologie.
  Wymień główne języki i biblioteki.
