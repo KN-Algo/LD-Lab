@@ -28,14 +28,12 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 * [ ] **Operacje bitowe**: Bezpośrednia manipulacja bitami w rejestrach poprzez przesuwanie w lewo i w prawo.
 * [ ] **Wizualizacja i monitoring**: Śledzenie zmian wartości zmiennych analogowych w czasie rzeczywistym.
 
+#### Iteracja 3: Zaawansowana Automatyka
+* [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
 
-#### Iteracja 3: Modularność i Abstrakcja
+#### Iteracja 4: Modularność i Abstrakcja
 * [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
 * [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
-
-#### Iteracja 4: Zaawansowana Automatyka
-
-* [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
 
 ## 🛠 Technologie
 Projekt opiera się na architekturze hybrydowej, łączącej wydajność natywną z elastycznością nowoczesnych interfejsów webowych.
@@ -54,6 +52,7 @@ Projekt opiera się na architekturze hybrydowej, łączącej wydajność natywn�
 
 ## 💻 Jak uruchomić (Getting Started)
 Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project-Setup/README.md)
+
 <!--
 ## 🛠 Technologie.
  Wymień główne języki i biblioteki.
