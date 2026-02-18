@@ -28,7 +28,7 @@ Aby pracować nad projektem, potrzebujesz następujących narzędzi:
 - **Visual Studio Code**:
     * Zalecane rozszerzenie: **CMake Tools** (Microsoft).
     * Zalecane rozszerzenie: **C/C++** (Microsoft).
-- **G++14**
+- **G++** >= 14 lub **Clang** >= 17
 - **CMake** w wersji >=3.25
 - **Node.js** w wersji >=24
 
@@ -62,6 +62,7 @@ Otwórz terminal w folderze `frontend/` i uruchom serwer deweloperski:
 ```bash
 cd frontend
 npm i
+npm run build
 npm run dev
 ```
 
@@ -70,10 +71,10 @@ npm run dev
 ### Krok 2: Skonfiguruj i uruchom C++ (VS Code)
 
 1. Otwórz główny folder projektu w VS Code.
-2. Wciśnij <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz **`CMake: Select Variant`** a następnie wybierz **Debug**
-3. Wciśnij <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz: **`CMake: Configure`**.
+2. Wciśnij <kbd>Ctrl</kbd> / <kbd>⌘ Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz **`CMake: Select Variant`** a następnie wybierz **Debug**
+3. Wciśnij <kbd>Ctrl</kbd> / <kbd>⌘ Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz: **`CMake: Configure`**.
 4. Kliknij przycisk **Build** (lub <kbd>F7</kbd>).
-5. Uruchom plik `.exe` (ikona "Play" na pasku CMake lub <kbd>Shift</kbd> + <kbd>F5</kbd>).
+5. Uruchom plik wykonywanlny (ikona "Play" na pasku CMake lub <kbd>Shift</kbd> + <kbd>F5</kbd>).
 
 Aplikacja otworzy okno, które w środku ładuje `http://localhost:5173`. Masz dostęp do DevTools pod <kbd>F12</kbd>.
 
@@ -81,7 +82,7 @@ Aplikacja otworzy okno, które w środku ładuje `http://localhost:5173`. Masz d
 
 ## Jak zbudować (Production)
 
-W tym trybie React jest kompilowany do plików statycznych, a następnie "wdrukowywany" w plik `.exe`. Aplikacja jest **jednym plikiem**, nie wymaga serwera `Node.js` ani konsoli w tle.
+W tym trybie React jest kompilowany do plików statycznych, a następnie "wdrukowywany" w plik wykonywalny. Aplikacja jest **jednym plikiem**, nie wymaga serwera `Node.js` ani konsoli w tle.
 
 ### Krok 1: Zbuduj Frontend
 
@@ -98,7 +99,7 @@ npm run build
 2. Wykonaj **`CMake: Configure`** (wymusza odświeżenie flag kompilatora).
 3. Wykonaj **`CMake: Build`**.
 
-Gotowy plik `LD-Lab.exe` znajdziesz w folderze `build/Release/` (lub `build/`).
+Gotowy plik `LD-Lab` znajdziesz w folderze `build/`.
 
 ## 📝 .gitignore
 
@@ -112,5 +113,4 @@ frontend/dist/
 frontend/node_modules/
 .vs/
 *.exe
-
 ```
