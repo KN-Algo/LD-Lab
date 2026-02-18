@@ -37,6 +37,20 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 
 * [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
 
+## 🛠 Technologie
+Projekt opiera się na architekturze hybrydowej, łączącej wydajność natywną z elastycznością nowoczesnych interfejsów webowych.
+
+### **Warstwa Wizualna**
+- Język: **TypeScript**
+- Framework: **React (Vite)**
+- Komunikacja: Integracja z backendem poprzez moduł **Saucer**
+
+### **Silnik obliczeniowy**
+
+- Język: **C++23** oparty na frameworku **Saucer**
+
+### **Narzędzia dodatkowe**
+- **CMake** (do budowania projektu i zarządzania zależnościami)
 
 ## 💻 Jak uruchomić (Getting Started)
 Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project%20Setup/README.md)

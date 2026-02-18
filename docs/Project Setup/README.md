@@ -69,12 +69,12 @@ npm run dev
 ### Krok 2: Skonfiguruj i uruchom C++ (VS Code)
 
 1. Otwórz główny folder projektu w VS Code.
-2. Wciśnij `Ctrl + Shift + P` i wpisz **`CMake: Select Variant`** a następnie wybierz **Debug**
-3. Wciśnij `Ctrl + Shift + P` i wpisz: **`CMake: Configure`**.
-4. Kliknij przycisk **Build** (lub `F7`).
-5. Uruchom plik `.exe` (ikona "Play" na pasku CMake lub `Shift + F5`).
+2. Wciśnij <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz **`CMake: Select Variant`** a następnie wybierz **Debug**
+3. Wciśnij <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> i wpisz: **`CMake: Configure`**.
+4. Kliknij przycisk **Build** (lub <kbd>F7</kbd>).
+5. Uruchom plik `.exe` (ikona "Play" na pasku CMake lub <kbd>Shift</kbd> + <kbd>F5</kbd>).
 
-Aplikacja otworzy okno, które w środku ładuje `http://localhost:5173`. Masz dostęp do DevTools pod `F12`.
+Aplikacja otworzy okno, które w środku ładuje `http://localhost:5173`. Masz dostęp do DevTools pod <kbd>F12</kbd>.
 
 ---
 
