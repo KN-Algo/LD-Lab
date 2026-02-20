@@ -75,30 +75,22 @@ export const VariableMonitor: React.FC = () => {
   const handleAddVariable = async () => {
     if (newVarName.trim() && !selectedVars.includes(newVarName)) {
       setSelectedVars([...selectedVars, newVarName]);
-      await subscribe(newVarName);
       setNewVarName("");
     }
   };
 
-  const handleRemoveVariable = async (varName: string) => {
-    setSelectedVars(selectedVars.filter((v) => v !== varName));
-    await unsubscribe(varName);
-  };
+  const handleRemoveVariable = useCallback((varName: string) => {
+    // Only remove from selectedVars - useEffect will handle unsubscribe
+    setSelectedVars(prev => prev.filter((v) => v !== varName));
+  }, []);
 
   const handlePollIntervalChange = useCallback((ms: number) => {
     pollInterval.setPollMs(ms);
   }, [pollInterval]);
 
-  const handleRemoveVariableCallback = useCallback(
-    (varName: string) => {
-      handleRemoveVariable(varName);
-    },
-    []
-  );
-
   return (
     <div style={styles.container}>
-      <h2>📊 Variable Monitor (Real-time Streaming)</h2>
+      <h2>Variable Monitor (Real-time Streaming)</h2>
 
       {/* Poll Interval Control */}
       <div style={styles.section}>
@@ -144,7 +136,7 @@ export const VariableMonitor: React.FC = () => {
               key={varName}
               varName={varName}
               variable={variables[varName]}
-              onRemove={handleRemoveVariableCallback}
+              onRemove={handleRemoveVariable}
             />
           ))
         )}

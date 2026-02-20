@@ -108,16 +108,10 @@ void StreamingApi::registerStreamingApi(saucer::smartview& webview) {
             
             // Create a callback when variable changes
             auto callback = [varName](const Variable& var) {
-                std::println("Variable '{}' changed to {}", varName, 
-                    std::holds_alternative<bool>(var.value) ? 
-                        (std::get<bool>(var.value) ? "true" : "false") :
-                    std::holds_alternative<int>(var.value) ?
-                        std::to_string(std::get<int>(var.value)) :
-                        std::to_string(std::get<float>(var.value))
-                );
-                
-                // TODO: In Phase 2, implement JavaScript callback here
-                // For now, just log the change
+                std::println("Variable '{}' changed", varName);
+                // Note: Because frontend uses polling (get_variable),
+                // the changed value is fetched on the next poll cycle.
+                // Real-time push notifications (WebSocket) are a future enhancement.
             };
             
             int subscriptionId = VariableTable::getInstance().subscribe(varName, callback);
@@ -138,6 +132,79 @@ void StreamingApi::registerStreamingApi(saucer::smartview& webview) {
             VariableTable::getInstance().unsubscribe(subscriptionId);
         } catch (const std::exception& e) {
             std::println(stderr, "unsubscribe_variable error: {}", e.what());
+        }
+    });
+    
+    // =====================================================
+    // FUNCTION: set_variable
+    // Sets a variable value from frontend
+    // =====================================================
+    webview.expose("set_variable", 
+        [](const std::string& varName, const std::string& typeStr, double value) -> bool {
+        try {
+            std::println("set_variable({}, {}, {})", varName, typeStr, value);
+            
+            auto& table = VariableTable::getInstance();
+            Variable var = table.get(varName);  // Get existing variable to get type
+            
+            // Convert string type to VariableType
+            VariableType type = var.type;
+            if (typeStr == "BOOL") type = VariableType::BOOL;
+            else if (typeStr == "INT") type = VariableType::INT;
+            else if (typeStr == "FLOAT") type = VariableType::FLOAT;
+            
+            // Convert double to appropriate type
+            if (type == VariableType::BOOL) {
+                table.set(varName, type, value != 0.0);
+            } else if (type == VariableType::INT) {
+                table.set(varName, type, static_cast<int>(value));
+            } else if (type == VariableType::FLOAT) {
+                table.set(varName, type, static_cast<float>(value));
+            }
+            
+            std::println("Variable '{}' set successfully", varName);
+            return true;
+        } catch (const std::exception& e) {
+            std::println(stderr, "set_variable error: {}", e.what());
+            return false;
+        }
+    });
+    
+    // =====================================================
+    // FUNCTION: create_variable
+    // Creates a new variable in the Variable Table
+    // =====================================================
+    webview.expose("create_variable",
+        [](const std::string& varName, const std::string& typeStr, double initialValue) -> bool {
+        try {
+            std::println("create_variable({}, {}, {})", varName, typeStr, initialValue);
+            
+            auto& table = VariableTable::getInstance();
+            
+            // Convert string type to VariableType
+            VariableType type = VariableType::BOOL;
+            if (typeStr == "BOOL") type = VariableType::BOOL;
+            else if (typeStr == "INT") type = VariableType::INT;
+            else if (typeStr == "FLOAT") type = VariableType::FLOAT;
+            else {
+                std::println(stderr, "create_variable error: Unknown type '{}'", typeStr);
+                return false;
+            }
+            
+            // Convert double to appropriate type based on the type string
+            if (type == VariableType::BOOL) {
+                table.create(varName, type, initialValue != 0.0);
+            } else if (type == VariableType::INT) {
+                table.create(varName, type, static_cast<int>(initialValue));
+            } else if (type == VariableType::FLOAT) {
+                table.create(varName, type, static_cast<float>(initialValue));
+            }
+            
+            std::println("Variable '{}' created successfully with initial value {}", varName, initialValue);
+            return true;
+        } catch (const std::exception& e) {
+            std::println(stderr, "create_variable error: {}", e.what());
+            return false;
         }
     });
     

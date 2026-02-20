@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useCallback, useRef, type ReactNode } from "react";
 import { apiClient } from "@/lib/api-client";
 
 /**
@@ -21,6 +21,8 @@ interface VariableContextType {
   unsubscribe: (varName: string) => Promise<void>;
   getVariable: (varName: string) => VariableData | undefined;
   getAllVariables: () => Promise<Record<string, VariableData>>;
+  // Global subscription cache
+  getSubscriptionId: (varName: string) => number | undefined;
 }
 
 /**
@@ -45,7 +47,8 @@ export const VariableProvider: React.FC<VariableProviderProps> = ({
   );
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const subscriptionIdsRef = React.useRef<Map<string, number>>(new Map());
+  // Global cache for subscription IDs - persists across remounts  
+  const subscriptionIdsRef = useRef<Map<string, number>>(new Map());
 
   const subscribe = useCallback(
     async (varName: string) => {
@@ -112,6 +115,13 @@ export const VariableProvider: React.FC<VariableProviderProps> = ({
     }
   }, []);
 
+  const getSubscriptionId = useCallback(
+    (varName: string): number | undefined => {
+      return subscriptionIdsRef.current.get(varName);
+    },
+    []
+  );
+
   const value: VariableContextType = {
     variables,
     loading,
@@ -120,6 +130,7 @@ export const VariableProvider: React.FC<VariableProviderProps> = ({
     unsubscribe,
     getVariable,
     getAllVariables,
+    getSubscriptionId,
   };
 
   return (

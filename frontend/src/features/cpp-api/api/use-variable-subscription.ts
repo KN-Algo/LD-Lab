@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { apiClient } from "@/lib/api-client";
+import { subscriptionCache } from "@/lib/subscription-cache";
 
 /**
  * Single variable subscription record
@@ -36,14 +37,21 @@ export const useVariableSubscription = (
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pollMs, setPollMs] = useState(initialPollMs);
-  const subscriptionIdsRef = useRef<Map<string, number>>(new Map());
   const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const subscribedVarsRef = useRef<Set<string>>(new Set());
+  const hasInitializedRef = useRef(false);
 
   /**
    * Subscribe to a single variable
    */
   const subscribe = useCallback(
     async (varName: string) => {
+      // Already subscribed
+      if (subscriptionCache.has(varName)) {
+        subscribedVarsRef.current.add(varName);
+        return;
+      }
+
       try {
         setError(null);
         const subId = await apiClient.call<number>("subscribe_variable", [
@@ -51,7 +59,8 @@ export const useVariableSubscription = (
         ]);
 
         if (subId && subId !== -1) {
-          subscriptionIdsRef.current.set(varName, subId);
+          subscriptionCache.set(varName, subId);
+          subscribedVarsRef.current.add(varName);
         }
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "Unknown error";
@@ -66,10 +75,11 @@ export const useVariableSubscription = (
    */
   const unsubscribe = useCallback(async (varName: string) => {
     try {
-      const subId = subscriptionIdsRef.current.get(varName);
+      const subId = subscriptionCache.get(varName);
       if (subId !== undefined) {
         await apiClient.call<void>("unsubscribe_variable", [subId]);
-        subscriptionIdsRef.current.delete(varName);
+        subscriptionCache.delete(varName);
+        subscribedVarsRef.current.delete(varName);
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Unknown error";
@@ -118,26 +128,60 @@ export const useVariableSubscription = (
   }, [varNames]);
 
   /**
-   * Subscribe to all variables on mount
+   * Subscribe to all variables on mount and handle var changes
    */
   useEffect(() => {
     const subscribeAll = async () => {
-      for (const varName of varNames) {
-        await subscribe(varName);
+      const currentSubscribed = subscribedVarsRef.current;
+      const newVarsSet = new Set(varNames);
+
+      // Unsubscribe from removed variables
+      for (const varName of currentSubscribed) {
+        if (!newVarsSet.has(varName)) {
+          const subId = subscriptionCache.get(varName);
+          if (subId !== undefined) {
+            try {
+              await apiClient.call<void>("unsubscribe_variable", [subId]);
+              subscriptionCache.delete(varName);
+            } catch (err) {
+              console.error(`Failed to unsubscribe from ${varName}`, err);
+            }
+          }
+          currentSubscribed.delete(varName);
+        }
       }
-      // After first subscription, mark as loaded
-      setInitialLoading(false);
+
+      // Subscribe to new variables
+      for (const varName of varNames) {
+        if (!currentSubscribed.has(varName)) {
+          try {
+            const subId = await apiClient.call<number>("subscribe_variable", [
+              varName,
+            ]);
+            if (subId && subId !== -1) {
+              subscriptionCache.set(varName, subId);
+              currentSubscribed.add(varName);
+            }
+          } catch (err) {
+            console.error(`Failed to subscribe to ${varName}`, err);
+          }
+        }
+      }
+
+      // Mark initial loading complete after first subscription
+      if (!hasInitializedRef.current && varNames.length > 0) {
+        setInitialLoading(false);
+        hasInitializedRef.current = true;
+      }
     };
 
     subscribeAll();
 
-    return () => {
-      // Unsubscribe all on unmount
-      for (const varName of varNames) {
-        void unsubscribe(varName);
-      }
-    };
-  }, [varNames, subscribe, unsubscribe]);
+    // NOTE: We intentionally do NOT unsubscribe on unmount
+    // Subscription IDs are cached globally, so the same variable
+    // always has the same ID throughout the app lifetime
+    // This prevents duplicate subscriptions and wasted IDs
+  }, [varNames]);
 
   /**
    * Set up polling interval
