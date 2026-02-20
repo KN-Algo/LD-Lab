@@ -2,9 +2,21 @@
 #include <saucer/smartview.hpp>
 #include <saucer/embedded/all.hpp>
 #include "api/ApiRegistry.h"
+#include "api/VariableTable.h"
+#include "api/VariableUpdater.h"
 
 coco::stray start(saucer::application *app)
 {
+    // Initialize variables for testing streaming
+    auto& variableTable = VariableTable::getInstance();
+    variableTable.create("flag", VariableType::BOOL, false);
+    variableTable.create("counter", VariableType::INT, 0);
+    variableTable.create("temperature", VariableType::FLOAT, 20.5f);
+    std::println("Variables initialized: flag, counter, temperature");
+
+    // Start background variable updater service
+    VariableUpdater::start();
+
     // Tworzenie okna i webview
     auto window  = saucer::window::create(app).value();
     auto webview = saucer::smartview::create({.window = window});
