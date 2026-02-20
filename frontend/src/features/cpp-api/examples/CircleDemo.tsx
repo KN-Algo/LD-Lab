@@ -1,43 +1,67 @@
-import React, { useState } from "react";
-import { useVariableSubscription, useVariableControl } from "@/features/cpp-api/api";
+import React, { useState, useRef, useCallback } from "react";
+import { useVariablePush, useVariableControl } from "@/features/cpp-api/api";
 
 /**
  * Example component demonstrating bidirectional variable control
  * 
+ * **Phase 2 Implementation** - Push-based real-time updates
+ * 
  * Shows how to:
- * - Read variable from backend (circle size)
+ * - Read variable from backend (circle size) via push
  * - Write variable from frontend (slider)
- * - See real-time update loop: frontend → backend → frontend
+ * - See real-time update loop: frontend → backend → frontend (no polling)
  */
 export const CircleDemo: React.FC = () => {
-  const { variables } = useVariableSubscription(["circleSize"], 500);
+  const { variables } = useVariablePush(["circleSize"]);
   const { setValue, error: setError } = useVariableControl();
   const [updateError, setUpdateError] = useState<string | null>(null);
+  const [localValue, setLocalValue] = useState<number | null>(null); // Optimistic UI
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSliderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseFloat(e.target.value);
-
-    try {
-      setUpdateError(null);
-      await setValue("circleSize", "FLOAT", newValue);
-    } catch (err) {
-      setUpdateError(err instanceof Error ? err.message : "Failed to set value");
+  // Debounced backend update (waits 100ms after last change)
+  const debouncedSetValue = useCallback((value: number) => {
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(async () => {
+      try {
+        setUpdateError(null);
+        await setValue("circleSize", "FLOAT", value);
+        setLocalValue(null); // Reset optimistic value after backend confirms
+      } catch (err) {
+        setUpdateError(err instanceof Error ? err.message : "Failed to set value");
+      }
+    }, 100); // 100ms debounce
+  }, [setValue]);
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseFloat(e.target.value);
+    
+    // Immediate optimistic UI update
+    setLocalValue(newValue);
+    
+    // Debounced backend update
+    debouncedSetValue(newValue);
   };
 
-  const circleSize = variables.circleSize?.value ?? 50;
+  // Use local optimistic value if available, otherwise backend value
+  const circleSize = localValue ?? variables.circleSize?.value ?? 50;
 
   return (
     <div style={styles.container}>
-      <h2>🎯 Circle Size Controller (Bidirectional)</h2>
+      <h2>🎯 Circle Size Controller (Bidirectional) ⚡</h2>
 
       {/* Info */}
       <div style={styles.infoSection}>
         <p>
-          <strong>Backend Value:</strong> {circleSize.toFixed(1)}
+          <strong>Current Value:</strong> {circleSize.toFixed(1)}
+          {localValue !== null && <span style={{ color: "#ff9800", marginLeft: "5px" }}>(updating...)</span>}
         </p>
         <p style={{ fontSize: "12px", color: "#666" }}>
-          ✓ Frontend sends value → Backend updates → Frontend reads back
+          ✓ Debounced updates (100ms) prevent flooding • Optimistic UI for smooth UX
         </p>
       </div>
 
@@ -123,7 +147,7 @@ export const CircleDemo: React.FC = () => {
             <strong>Backend:</strong> VariableTable updates circleSize variable
           </li>
           <li>
-            <strong>Frontend Poll:</strong> useVariableSubscription gets new value
+            <strong>Frontend Poll:</strong> Push notification received instantly
           </li>
           <li>
             <strong>UI Update:</strong> Circle re-renders with new size

@@ -1,5 +1,5 @@
 import React, { useState, memo, useCallback } from "react";
-import { useVariableSubscription } from "@/features/cpp-api/api";
+import { useVariablePush } from "@/features/cpp-api/api";
 
 interface VariableData {
   name: string;
@@ -55,10 +55,11 @@ VariableCard.displayName = "VariableCard";
 /**
  * Example component demonstrating real-time variable monitoring
  * 
+ * **Phase 2 Implementation** - Push-based real-time updates (no polling)
+ * 
  * Shows how to:
- * - Subscribe to variables with useVariableSubscription hook
- * - Display real-time updates
- * - Adjust polling frequency
+ * - Subscribe to variables with useVariablePush hook
+ * - Display real-time updates via WebSocket/Push
  * - Handle loading and error states
  */
 export const VariableMonitor: React.FC = () => {
@@ -69,8 +70,8 @@ export const VariableMonitor: React.FC = () => {
   ]);
   const [newVarName, setNewVarName] = useState("");
 
-  const { variables, loading, error, subscribe, unsubscribe, pollInterval } =
-    useVariableSubscription(selectedVars, 500);
+  const { variables, loading, error } =
+    useVariablePush(selectedVars);
 
   const handleAddVariable = async () => {
     if (newVarName.trim() && !selectedVars.includes(newVarName)) {
@@ -84,29 +85,9 @@ export const VariableMonitor: React.FC = () => {
     setSelectedVars(prev => prev.filter((v) => v !== varName));
   }, []);
 
-  const handlePollIntervalChange = useCallback((ms: number) => {
-    pollInterval.setPollMs(ms);
-  }, [pollInterval]);
-
   return (
     <div style={styles.container}>
-      <h2>Variable Monitor (Real-time Streaming)</h2>
-
-      {/* Poll Interval Control */}
-      <div style={styles.section}>
-        <label>
-          Poll Interval: {pollInterval.getPollMs()}ms
-          <input
-            type="range"
-            min="50"
-            max="2000"
-            step="50"
-            defaultValue={500}
-            onChange={(e) => handlePollIntervalChange(parseInt(e.target.value))}
-            style={{ marginLeft: "10px" }}
-          />
-        </label>
-      </div>
+      <h2>Variable Monitor (Real-time Push Notifications) ⚡</h2>
 
       {/* Add New Variable */}
       <div style={styles.section}>
@@ -145,10 +126,10 @@ export const VariableMonitor: React.FC = () => {
       {/* Info */}
       <div style={styles.info}>
         <p>
-          📡 <strong>Streaming Status:</strong> Connected to Variable Table
+          📡 <strong>Push Status:</strong> Connected to Variable Table (Phase 2)
         </p>
-        <p>Variables are updated every {pollInterval.getPollMs()}ms</p>
-        <p>✓ On-Demand API calls and streaming work independently</p>
+        <p>✓ Real-time updates via WebSocket/Push (no polling)</p>
+        <p>✓ Updates are sent immediately when variables change on backend</p>
       </div>
     </div>
   );

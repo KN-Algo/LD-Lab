@@ -6,6 +6,7 @@
 #include <functional>
 #include <shared_mutex>
 #include <string>
+#include <chrono>
 
 /// Variable type enumeration
 enum class VariableType {
@@ -88,6 +89,10 @@ public:
     /// @param subscriptionId ID returned by subscribe()
     void unsubscribe(int subscriptionId);
     
+    /// Set webview for push notifications
+    /// @param webview Pointer to saucer smartview (for JS execution)
+    void setWebview(void* webview);
+    
     /// Clear all variables and subscriptions
     void clear();
     
@@ -99,7 +104,15 @@ private:
     std::map<int, std::pair<std::string, VariableChangeCallback>> m_subscribers;
     int m_nextSubscriptionId = 1;
     mutable std::shared_mutex m_mutex;
+    void* m_webview = nullptr;  // For push notifications (saucer::smartview*)
+    
+    // Throttling for push notifications (per variable)
+    std::map<std::string, std::chrono::steady_clock::time_point> m_lastPushTime;
+    static constexpr std::chrono::milliseconds PUSH_THROTTLE_MS{16}; // ~60fps
     
     /// Helper to validate type matches
     void validateType(const std::string& name, VariableType expectedType) const;
+    
+    /// Helper to push variable change to frontend via JavaScript
+    void notifyFrontend(const Variable& var);
 };

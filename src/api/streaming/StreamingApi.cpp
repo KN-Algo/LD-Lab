@@ -60,6 +60,9 @@ void StreamingApi::registerStreamingApi(saucer::smartview& webview) {
     
     auto& table = VariableTable::getInstance();
     
+    // Enable push notifications to frontend
+    table.setWebview(&webview);
+    
     // =====================================================
     // FUNCTION: get_variable
     // Returns a single variable by name
