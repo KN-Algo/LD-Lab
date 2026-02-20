@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { useGreeter, useAddNumbers, useAddMany } from "@/features/cpp-api/api";
+import { VariableMonitor } from "@/features/cpp-api/examples/VariableMonitor";
 
 // TEN PONIŻSZY KOD JEST KODEM TYLKO DO ZAPREZENTOWANIA DZIAŁANIA SAUCERA - NIE JEST TO KOD, KTÓRY POWINIEN BYĆ APLIKACJI
 const Button = ({
@@ -71,6 +72,8 @@ function Home() {
           </Button>
         </div>
       </div>
+
+      <VariableMonitor />
 
       <Link to="/about" className="text-blue-500 underline block mt-4">
         O nas
