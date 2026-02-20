@@ -1,0 +1,52 @@
+# === Foldery budowania (CMake & C++) ===
+build/
+out/
+bin/
+cmake-build-*/
+# To jest ten folder z wygenerowanymi nagłówkami C++ dla Reacta:
+embedded/
+
+# === Pliki tymczasowe Visual Studio & CMake ===
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.suo
+*.user
+*.pdb
+*.ipdb
+*.iobj
+*.ilk
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+*.cmake
+!CMakeLists.txt
+!cmake/*.cmake
+
+# === Pliki binarne ===
+*.exe
+*.dll
+*.so
+*.dylib
+*.lib
+*.exp
+
+# === Frontend (Node.js & Vite) ===
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+frontend/build/
+
+# Logi
+npm-debug.log*
+yarn-debug.log*
+
+# Pliki środowiskowe
+.env
+.env.local
+
+# === Systemowe ===
+.DS_Store
+Thumbs.db

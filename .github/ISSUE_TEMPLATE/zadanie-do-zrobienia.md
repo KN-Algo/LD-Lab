@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ## Opis zadania i szczegółowe wymagania
-Jasny i przejrzysty opis taska, który trzeba zrobić, np.: 
+Jasny i przejrzysty opis taska, który trzeba zrobić, np.:
 Należy wykonać projekt PCB Kontaktronów. W tym projekcie musi zawierać się: [...]
 
 ## Dodatkowy kontekst i źrodła pomocnicze

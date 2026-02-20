@@ -15,26 +15,44 @@ Projekt koncentruje się na stworzeniu przystępnego i elastycznego środowiska 
 
 
 ### 🚀 Funkcjonalności
-#### Iteracja 1: Bare Minimum (Fundamenty) 
+#### Iteracja 1: Bare Minimum (Fundamenty)
 * [ ] **Obsługa podstawowych styków i cewek**: Implementacja wejść/wyjść Normalnie Otwartych (NO), Normalnie Zamkniętych (NC) oraz instrukcji Set i Reset.
 * [ ] **System zmiennych**: Obsługa typów logicznych (BOOL) oraz liczbowych (INT), reprezentujących również sygnały analogowe.
 * [ ] **Moduły liczników**: Zliczanie zdarzeń w górę (CTU), w dół (CTD) oraz dwukierunkowo.
 * [ ] **Mechanizmy czasowe**: Implementacja timerów z opóźnionym załączeniem (Timer ON) i wyłączeniem (Timer OFF).
 * [ ] **Logika i porównania**: Obsługa komparatorów (równe, większe, mniejsze), operatorów (AND, OR) oraz detekcji zboczy sygnału.
 
-#### Iteracja 2: Rozszerzenie i Diagnostyka 
+#### Iteracja 2: Rozszerzenie i Diagnostyka
 * [ ] **Dokumentacja kodu**: Możliwość dodawania komentarzy do poszczególnych szczebli (rungów) oraz bloków funkcyjnych.
 * [ ] **Manipulacja danymi**: Wprowadzenie rejestrów blokowych, instrukcji przesyłania danych (MOVE) oraz operacji matematycznych (ABS, MOD, MAX, MIN).
 * [ ] **Operacje bitowe**: Bezpośrednia manipulacja bitami w rejestrach poprzez przesuwanie w lewo i w prawo.
 * [ ] **Wizualizacja i monitoring**: Śledzenie zmian wartości zmiennych analogowych w czasie rzeczywistym.
 
-#### Iteracja 3: Zaawansowana Automatyka 
-
+#### Iteracja 3: Zaawansowana Automatyka
 * [ ] **Regulacja PID**: Wprowadzenie gotowego bloku regulatora PID z interfejsem do modyfikacji parametrów i podglądu procesu.
 
-#### Iteracja 4: Modularność i Abstrakcja 
+#### Iteracja 4: Modularność i Abstrakcja
 * [ ] **Modularność (User FB)**: Mechanizm automatycznego generowania bloków funkcyjnych z istniejącej logiki LD.
 * [ ] **Reużywalność**: Możliwość wielokrotnego osadzania tego samego bloku w różnych miejscach programu bez kopiowania kodu źródłowego.
+
+## 🛠 Technologie
+Projekt opiera się na architekturze hybrydowej, łączącej wydajność natywną z elastycznością nowoczesnych interfejsów webowych.
+
+### **Warstwa Wizualna**
+- Język: **TypeScript**
+- Framework: **React (Vite)**
+- Komunikacja: Integracja z backendem poprzez moduł **Saucer**
+
+### **Silnik obliczeniowy**
+
+- Język: **C++23** oparty na frameworku **Saucer**
+
+### **Narzędzia dodatkowe**
+- **CMake** (do budowania projektu i zarządzania zależnościami)
+
+## 💻 Jak uruchomić (Getting Started)
+Wszystkie informacje odnośnie uruchamiania aplikacji (kompilacja dla developerki jak i generowania binarek znajduje się [tutaj](/docs/Project-Setup/README.md)
+
 <!--
 ## 🛠 Technologie.
  Wymień główne języki i biblioteki.
@@ -92,6 +110,7 @@ Jeden obraz znaczy więcej niż 1000 słów. Wstaw tutaj zrzut ekranu aplikacji,
 Projekt realizowany przez członków **KN Algo** przy Politechnice Wrocławskiej:
 
   * **[Bartłomiej Kuk](https://github.com/PEXEL2002)** - Team Leader, Pomysłodawca projektu
+  * **[Adrian Goral](https://github.com/xEdziu)** - Integracja frontendu z backendem, tester i wsparcie programistów
   * **[Wiktor Jankowski-Ostrowski](https://github.com/WiktorPWR)** - Wsparcie merytoryczne, autor dokumentacji wymagań
 
 -----
