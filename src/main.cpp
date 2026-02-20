@@ -2,17 +2,13 @@
 #include <saucer/smartview.hpp>
 #include <saucer/embedded/all.hpp>
 #include "api/ApiRegistry.h"
-#include "api/VariableTable.h"
+#include "api/VariableInitializer.h"
 #include "api/VariableUpdater.h"
 
 coco::stray start(saucer::application *app)
 {
-    // Initialize variables for testing streaming
-    auto& variableTable = VariableTable::getInstance();
-    variableTable.create("flag", VariableType::BOOL, false);
-    variableTable.create("counter", VariableType::INT, 0);
-    variableTable.create("temperature", VariableType::FLOAT, 20.5f);
-    std::println("Variables initialized: flag, counter, temperature");
+    // Initialize demo variables for streaming
+    VariableInitializer::initialize();
 
     // Start background variable updater service
     VariableUpdater::start();
