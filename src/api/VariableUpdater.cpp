@@ -31,6 +31,10 @@ void VariableUpdater::updateThread()
     int counter = 0;
 
     while (running) {
+
+        /// UPDATE YOUR VARIABLES HERE
+        /// CODE BELOW IS JUST FOR DEMONSTRATION PURPOSES AND SHOULD NOT BE USED IN PRODUCTION CODE
+
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         // Update counter (0 to 100)
