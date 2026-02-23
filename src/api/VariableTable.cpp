@@ -1,7 +1,20 @@
 #include "api/VariableTable.h"
+#include "api/streaming/BatchQueue.h"
+#include "api/streaming/DeltaTracker.h"
 #include <saucer/smartview.hpp>
 #include <stdexcept>
 #include <print>
+
+double VariableTable::getAsDouble(const VariableValue& value) {
+    if (std::holds_alternative<bool>(value)) {
+        return std::get<bool>(value) ? 1.0 : 0.0;
+    } else if (std::holds_alternative<int>(value)) {
+        return static_cast<double>(std::get<int>(value));
+    } else if (std::holds_alternative<float>(value)) {
+        return static_cast<double>(std::get<float>(value));
+    }
+    return 0.0;
+}
 
 VariableTable& VariableTable::getInstance() {
     static VariableTable instance;
@@ -163,50 +176,22 @@ void VariableTable::notifyFrontend(const Variable& var) {
         return;  // No webview set, skip push notification
     }
     
-    // Throttle push notifications to prevent flooding (max ~60fps per variable)
-    auto now = std::chrono::steady_clock::now();
-    auto lastPush = m_lastPushTime.find(var.name);
+    double value = getAsDouble(var.value);
     
-    if (lastPush != m_lastPushTime.end()) {
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastPush->second);
-        if (elapsed < PUSH_THROTTLE_MS) {
-            // Too soon, skip this push
-            return;
-        }
+    auto& tracker = streaming::DeltaTracker::getInstance();
+    if (!tracker.hasChanged(var.name, value)) {
+        return; // Skip if value hasn't changed significantly
     }
     
-    // Update last push time
-    m_lastPushTime[var.name] = now;
-    
-    try {
-        // Cast void* back to saucer::smartview*
-        auto* webview = static_cast<saucer::smartview*>(m_webview);
-        // Convert value to double for JavaScript
-        double jsValue = 0.0;
-        if (std::holds_alternative<bool>(var.value)) {
-            jsValue = std::get<bool>(var.value) ? 1.0 : 0.0;
-        } else if (std::holds_alternative<int>(var.value)) {
-            jsValue = static_cast<double>(std::get<int>(var.value));
-        } else if (std::holds_alternative<float>(var.value)) {
-            jsValue = static_cast<double>(std::get<float>(var.value));
-        }
-        
-        // Convert type to string
-        std::string typeStr;
-        switch (var.type) {
-            case VariableType::BOOL: typeStr = "BOOL"; break;
-            case VariableType::INT: typeStr = "INT"; break;
-            case VariableType::FLOAT: typeStr = "FLOAT"; break;
-        }
-        
-        // Execute JavaScript to notify frontend using smartview's built-in formatting
-        // Call window.onVariableChange(name, type, value) if it exists
-        webview->execute(
-            "if (window.onVariableChange) {{ window.onVariableChange({}, {}, {}); }}",
-            var.name, typeStr, jsValue
-        );
-        
-    } catch (const std::exception& e) {
-        std::println(stderr, "[VariableTable] Error pushing to frontend: {}", e.what());
+    tracker.recordSent(var.name, value);
+
+    std::string typeStr;
+    switch (var.type) {
+        case VariableType::BOOL: typeStr = "BOOL"; break;
+        case VariableType::INT: typeStr = "INT"; break;
+        case VariableType::FLOAT: typeStr = "FLOAT"; break;
     }
+
+    auto& batchQueue = streaming::BatchQueue::getInstance();
+    batchQueue.enqueue(var.name, typeStr, value);
 }

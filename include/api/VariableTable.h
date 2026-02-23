@@ -99,6 +99,8 @@ public:
 private:
     VariableTable() = default;
     
+    static double getAsDouble(const VariableValue& value);
+    
     // Member variables
     std::map<std::string, Variable> m_variables;
     std::map<int, std::pair<std::string, VariableChangeCallback>> m_subscribers;

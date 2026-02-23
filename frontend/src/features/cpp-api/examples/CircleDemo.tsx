@@ -1,13 +1,13 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import { useVariablePush, useVariableControl } from "@/features/cpp-api/api";
 
 /**
  * Example component demonstrating bidirectional variable control
  * 
- * **Phase 2 Implementation** - Push-based real-time updates
+ * **Phase 3 Implementation** - Binary Protocol Streaming
  * 
  * Shows how to:
- * - Read variable from backend (circle size) via push
+ * - Read variable from backend (circle size) via binary push
  * - Write variable from frontend (slider)
  * - See real-time update loop: frontend → backend → frontend (no polling)
  */
@@ -16,35 +16,21 @@ export const CircleDemo: React.FC = () => {
   const { setValue, error: setError } = useVariableControl();
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [localValue, setLocalValue] = useState<number | null>(null); // Optimistic UI
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounced backend update (waits 100ms after last change)
-  const debouncedSetValue = useCallback((value: number) => {
-    // Clear previous timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Set new timer
-    debounceTimerRef.current = setTimeout(async () => {
-      try {
-        setUpdateError(null);
-        await setValue("circleSize", "FLOAT", value);
-        setLocalValue(null); // Reset optimistic value after backend confirms
-      } catch (err) {
-        setUpdateError(err instanceof Error ? err.message : "Failed to set value");
-      }
-    }, 100); // 100ms debounce
-  }, [setValue]);
-
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSliderChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value);
     
     // Immediate optimistic UI update
     setLocalValue(newValue);
     
-    // Debounced backend update
-    debouncedSetValue(newValue);
+    // Immediate backend update - binary protocol handles high frequency well
+    try {
+      setUpdateError(null);
+      await setValue("circleSize", "FLOAT", newValue);
+      setLocalValue(null); // Reset optimistic value after backend confirms
+    } catch (err) {
+      setUpdateError(err instanceof Error ? err.message : "Failed to set value");
+    }
   };
 
   // Use local optimistic value if available, otherwise backend value
@@ -61,7 +47,7 @@ export const CircleDemo: React.FC = () => {
           {localValue !== null && <span style={{ color: "#ff9800", marginLeft: "5px" }}>(updating...)</span>}
         </p>
         <p style={{ fontSize: "12px", color: "#666" }}>
-          ✓ Debounced updates (100ms) prevent flooding • Optimistic UI for smooth UX
+          ✓ High-frequency binary streaming • Optimistic UI for smooth UX
         </p>
       </div>
 

@@ -76,9 +76,6 @@ function Home() {
 
       <VariableMonitor />
 
-      <Link to="/about" className="text-blue-500 underline block mt-4">
-        O nas
-      </Link>
       <Link to="/circle" className="text-blue-500 underline block mt-2">
         Circle Demo
       </Link>
@@ -116,7 +113,6 @@ function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/circle" element={<Circle />} />
       </Routes>
     </HashRouter>

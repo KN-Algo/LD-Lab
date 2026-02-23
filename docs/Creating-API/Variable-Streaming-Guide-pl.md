@@ -2,7 +2,7 @@
 
 ## Wprowadzenie
 
-System Streaming Zmiennych umożliwia synchronizację danych w czasie rzeczywistym między backendem C++ a frontendem React. Zmienne są automatycznie push'owane do frontendu gdy się zmieniają, eliminując potrzebę polling'u.
+System Streaming Zmiennych umożliwia synchronizację danych w czasie rzeczywistym między backendem C++ a frontendem React. Zmienne są automatycznie push'owane do frontendu gdy się zmieniają, wykorzystując wysoce zoptymalizowany, niestandardowy protokół binarny (Base64) z grupowaniem (batching) i śledzeniem zmian (delta tracking). Eliminując potrzebę polling'u i narzut JSON-a, system ten jest gotowy na bardzo wysoką częstotliwość aktualizacji.
 
 ## Szybki start
 

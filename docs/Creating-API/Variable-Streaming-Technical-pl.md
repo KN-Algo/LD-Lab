@@ -2,7 +2,7 @@
 
 ## Przegląd architektury
 
-System Streaming Zmiennych zapewnia komunikację bidyrekcjonalną w czasie rzeczywistym między backendem C++ a frontendem React, wykorzystując architekturę opartą na push-notyfikacjach.
+System Streaming Zmiennych zapewnia komunikację bidyrekcjonalną w czasie rzeczywistym między backendem C++ a frontendem React, wykorzystując architekturę opartą na push-notyfikacjach z niestandardowym protokołem binarnym (Base64).
 
 ### Kluczowe komponenty
 
@@ -14,52 +14,64 @@ System Streaming Zmiennych zapewnia komunikację bidyrekcjonalną w czasie rzecz
    - Implementuje wzorzec obserwatora dla powiadomień o zmianach
    - Synchronizacja wątków poprzez `std::shared_mutex`
 
-2. **StreamingApi** (`src/api/streaming/StreamingApi.cpp`)
+2. **BatchQueue** (`src/api/streaming/BatchQueue.cpp`)
+   - Grupuje aktualizacje zmiennych w paczki (batching)
+   - Wysyła paczki co określony czas (np. 16ms) lub po zebraniu określonej liczby zmiennych (np. 10)
+   - Działa na osobnym wątku, aby nie blokować głównego wątku aplikacji
+
+3. **DeltaTracker** (`src/api/streaming/DeltaTracker.cpp`)
+   - Śledzi ostatnio wysłane wartości zmiennych
+   - Filtruje wartości, które nie uległy zmianie (z uwzględnieniem epsilon `1e-9` dla typów zmiennoprzecinkowych)
+   - Zapobiega wysyłaniu redundantnych danych do frontendu
+
+4. **BinaryEncoder** (`src/api/streaming/BinaryProtocol.cpp`)
+   - Serializuje paczki zmiennych do niestandardowego formatu binarnego
+   - Minimalizuje narzut przesyłanych danych w porównaniu do JSON-a
+
+5. **StreamingApi** (`src/api/streaming/StreamingApi.cpp`)
    - Udostępnia funkcje wywoływalne z JavaScriptu
    - Zarządza cyklem życia subskrypcji
    - Udostępnia operacje CRUD dla zmiennych
 
-3. **VariableInitializer** (`src/api/VariableInitializer.cpp`)
-   - Inicjalizuje zmienne demonstracyjne przy starcie
-   - Oddzielone od głównej logiki aplikacji
-
-4. **VariableUpdater** (`src/api/VariableUpdater.cpp`)
-   - Usługa działająca w tle, aktualizująca zmienne
-   - Uruchamiana na osobnym wątku
-   - Aktualizuje zmienne demonstracyjne w interwałach 500ms
-
 #### Frontend (React/TypeScript)
 
-1. **useVariablePush** (`frontend/src/features/cpp-api/api/use-variable-push.ts`)
-   - Hook React dla aktualizacji zmiennych w czasie rzeczywistym
-   - Używa globalnego mechanizmu callback okna
-   - Automatycznie zarządza cyklem życia subskrypcji
+1. **BinaryDecoder** (`frontend/src/lib/binary-protocol.ts`)
+   - Deserializuje dane binarne otrzymane z backendu
+   - Konwertuje ciąg Base64 na `Uint8Array` i odczytuje wartości zgodnie z protokołem
 
-2. **useVariableControl** (`frontend/src/features/cpp-api/api/use-variable-control.ts`)
+2. **useVariablePush** (`frontend/src/features/cpp-api/api/use-variable-push.ts`)
+   - Hook React dla aktualizacji zmiennych w czasie rzeczywistym
+   - Nasłuchuje na globalną funkcję `window.binaryUpdate`
+   - Dekoduje paczki binarne i grupuje aktualizacje stanu Reacta, aby zminimalizować liczbę renderowań
+
+3. **useVariableControl** (`frontend/src/features/cpp-api/api/use-variable-control.ts`)
    - Hook do tworzenia i modyfikowania zmiennych
-   - Udostępnia zdebounced'owaną funkcję setValue
    - Obsługa błędów i stany ładowania
 
-3. **subscriptionCache** (`frontend/src/lib/subscription-cache.ts`)
+4. **subscriptionCache** (`frontend/src/lib/subscription-cache.ts`)
    - Globalny cache dla ID subskrypcji
    - Zapobiega duplikatowym subskrypcjom
    - Trwa przez ponowne montaże komponentów
 
 ## Przepływ komunikacji
 
-### Architektura push-notyfikacji
+### Architektura push-notyfikacji (Protokół Binarny)
 
 ```
-Backend Thread               VariableTable              Frontend
-     |                            |                         |
-     |-- update variable -------->|                         |
-     |                            |-- notifyFrontend() ---->|
-     |                            |   (throttled 16ms)      |
-     |                            |                         |
-     |                            |-- execute JS ---------->|
-     |                            |  window.onVariableChange|
-     |                            |                         |
-     |                            |                    update state
+Backend Thread               VariableTable              BatchQueue                 Frontend
+     |                            |                         |                         |
+     |-- update variable -------->|                         |                         |
+     |                            |-- notifyFrontend() ---->|                         |
+     |                            |   (DeltaTracker check)  |                         |
+     |                            |                         |-- flush() ------------->|
+     |                            |                         |   (encode binary)       |
+     |                            |                         |   (base64 encode)       |
+     |                            |                         |-- execute JS ---------->|
+     |                            |                         |  window.binaryUpdate    |
+     |                            |                         |                         |
+     |                            |                         |                    decode base64
+     |                            |                         |                    decode binary
+     |                            |                         |                    update state
 ```
 
 ### Przepływ subskrypcji
@@ -81,14 +93,14 @@ Frontend                 Backend API              VariableTable
 Frontend                Backend API            VariableTable
    |                         |                      |
    |-- setValue() --------->|                      |
-   |   (debounced 100ms)    |                      |
+   |   (immediate)          |                      |
    |                        |-- set() ------------>|
    |                        |              validate type
    |                        |              update value
    |                        |              notify observers
    |                        |              notifyFrontend()
    |                        |                      |
-   |<-- push notification ------------------------|
+   |<-- binary push ------------------------------|
 ```
 
 ## Bezpieczeństwo wątków
@@ -99,6 +111,12 @@ Frontend                Backend API            VariableTable
 - **Operacje zapisu**: Używają `std::unique_lock` (exclusive access)
 - **Wykonanie callback'ów**: Zachodzi w zakresie blokady dla spójności
 - **Push notyfikacje**: Ograniczone dla każdej zmiennej, aby zapobiec warunkom wyścigów
+
+### Synchronizacja BatchQueue
+
+- **Kolejkowanie**: Używa `std::unique_lock` do dodawania zmiennych do kolejki
+- **Wątek roboczy**: Używa `std::condition_variable_any` do oczekiwania na nowe zmienne lub upływ czasu
+- **Wysyłanie**: Kopiuje zmienne z kolejki i zwalnia blokadę przed wywołaniem callbacka (aby nie blokować innych wątków)
 
 ### Strategia Mutex
 
@@ -124,42 +142,33 @@ class VariableTable {
 
 ### Mechanizmy ograniczania
 
-#### Ograniczanie na backencie
-- Limit szybkości: 16ms na zmienną (około 60 aktualizacji/sekundę)
-- Implementacja: Śledzenie czasu sygnatury dla każdej zmiennej
-- Cel: Zapobieganie powodzią wykonania JavaScriptu
+#### Ograniczanie na backencie (Batching)
+- Limit szybkości: 16ms na paczkę (około 60 aktualizacji/sekundę)
+- Limit rozmiaru: 10 zmiennych na paczkę
+- Implementacja: `BatchQueue` z osobnym wątkiem roboczym
+- Cel: Zapobieganie powodzią wykonania JavaScriptu i minimalizacja narzutu komunikacji
 
 ```cpp
-static constexpr std::chrono::milliseconds PUSH_THROTTLE_MS{16};
-std::map<std::string, std::chrono::steady_clock::time_point> m_lastPushTime;
+batchQueue.configure(
+    10,                                    // max 10 variables per batch
+    std::chrono::milliseconds(16)         // or every 16ms
+);
 ```
 
-#### Debouncing na froncie
-- Opóźnienie debounce'u: 100ms
-- Zastosowane do: Operacje setValue
-- Cel: Reduced API call frequency podczas szybkiego wejścia użytkownika
+#### Debouncing na froncie (Usunięty)
+- Wcześniej stosowano opóźnienie 100ms dla operacji `setValue`
+- Zostało to usunięte w Fazie 3, ponieważ protokół binarny jest wystarczająco wydajny, aby obsłużyć natychmiastowe aktualizacje (np. z suwaka)
 
-```typescript
-const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-debounceTimerRef.current = setTimeout(async () => {
-    await setValue(varName, type, value);
-}, 100);
-```
-
-### Detekcja zmian wartości
+### Detekcja zmian wartości (Delta Tracking)
 
 Backend wyzwala notyfikacje tylko gdy wartość faktycznie się zmieni:
 
 ```cpp
-bool changed = false;
-if (std::holds_alternative<int>(var.value)) {
-    changed = std::get<int>(var.value) != std::get<int>(newValue);
+auto& tracker = streaming::DeltaTracker::getInstance();
+if (!tracker.hasChanged(var.name, value)) {
+    return; // Skip if value hasn't changed significantly
 }
-
-if (!changed) {
-    return;  // Skip callbacks
-}
+tracker.recordSent(var.name, value);
 ```
 
 Frontend dokonuje podobnego porównania przed aktualizacją stanu:
@@ -297,19 +306,18 @@ if (type == VariableType::INT) {
 
 ## Przyszłe ulepszenia
 
-### Rozważania fazy 3
-- Warstwa transportu WebSocket (zamieniająca JavaScript execute)
-- Protokół binarny dla zmniejszonego narzutu
-- Zbiorowe notyfikacje
-- Aktualizacje różnicowe (tylko zmienione pola)
+### Rozważania fazy 4
+- Warstwa transportu WebSocket (jeśli Base64 okaże się niewystarczający)
 - Odporność na połączenie i logika ponownego połączenia
 - Filtrowanie i agregacja po stronie serwera
+- Dynamiczne dostosowywanie parametrów batchingu w zależności od obciążenia
 
 ## Zależności
 
 ### Backend
 - Standard biblioteki C++23
 - Biblioteka WebView Saucer
+- Biblioteka b64 (do kodowania Base64)
 - `<print>` dla rejestrowania
 - `<chrono>` dla timingu
 - `<shared_mutex>` dla synchronizacji

@@ -55,11 +55,11 @@ VariableCard.displayName = "VariableCard";
 /**
  * Example component demonstrating real-time variable monitoring
  * 
- * **Phase 2 Implementation** - Push-based real-time updates (no polling)
+ * **Phase 3 Implementation** - Binary Protocol Streaming
  * 
  * Shows how to:
  * - Subscribe to variables with useVariablePush hook
- * - Display real-time updates via WebSocket/Push
+ * - Display real-time updates via Binary Protocol
  * - Handle loading and error states
  */
 export const VariableMonitor: React.FC = () => {
@@ -87,7 +87,7 @@ export const VariableMonitor: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <h2>Variable Monitor (Real-time Push Notifications) ⚡</h2>
+      <h2>Variable Monitor (Binary Protocol Streaming) ⚡</h2>
 
       {/* Add New Variable */}
       <div style={styles.section}>
@@ -126,10 +126,11 @@ export const VariableMonitor: React.FC = () => {
       {/* Info */}
       <div style={styles.info}>
         <p>
-          📡 <strong>Push Status:</strong> Connected to Variable Table (Phase 2)
+          📡 <strong>Push Status:</strong> Connected to Variable Table
         </p>
-        <p>✓ Real-time updates via WebSocket/Push (no polling)</p>
-        <p>✓ Updates are sent immediately when variables change on backend</p>
+        <p>✓ Real-time updates via Custom Binary Protocol (Base64)</p>
+        <p>✓ Updates are batched and sent efficiently from backend</p>
+        <p>✓ Delta tracking prevents sending unchanged values</p>
       </div>
     </div>
   );

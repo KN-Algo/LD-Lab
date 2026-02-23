@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { apiClient } from "@/lib/api-client";
+import { apiClient, base64ToUint8Array } from "@/lib/api-client";
 import { subscriptionCache } from "@/lib/subscription-cache";
+import { BinaryDecoder, VariableType } from "@/lib/binary-protocol";
 
 /**
  * Single variable data from backend
@@ -17,6 +18,8 @@ interface VariableData {
 declare global {
   interface Window {
     onVariableChange?: (name: string, type: string, value: number) => void;
+    binaryUpdate?: (base64Data: string) => void;
+    __receiveBinaryUpdate?: (base64Data: string) => void;
     __variableChangeListeners?: Map<string, Set<(data: VariableData) => void>>;
   }
 }
@@ -120,16 +123,36 @@ export const useVariablePush = (varNames: string[] = []) => {
     }
 
     // Setup global window callback (once)
-    if (!window.onVariableChange) {
-      window.onVariableChange = (name: string, type: string, value: number) => {
-        const listeners = window.__variableChangeListeners?.get(name);
-        if (listeners) {
-          const data: VariableData = {
-            name,
-            type: type as "BOOL" | "INT" | "FLOAT",
-            value,
-          };
-          listeners.forEach((listener) => listener(data));
+    if (!window.binaryUpdate) {
+      window.binaryUpdate = (base64Data: string) => {
+        try {
+          const binaryData = base64ToUint8Array(base64Data);
+          const { entries } = BinaryDecoder.decodeBatch(binaryData);
+          
+          // Group updates by variable name to avoid multiple renders
+          const updates: Record<string, VariableData> = {};
+          
+          for (const entry of entries) {
+            let typeStr: "BOOL" | "INT" | "FLOAT" = "FLOAT";
+            if (entry.type === VariableType.BOOL) typeStr = "BOOL";
+            else if (entry.type === VariableType.INT) typeStr = "INT";
+            
+            const data: VariableData = {
+              name: entry.name,
+              type: typeStr,
+              value: entry.value
+            };
+            
+            updates[entry.name] = data;
+            
+            // Notify individual listeners
+            const listeners = window.__variableChangeListeners?.get(entry.name);
+            if (listeners) {
+              listeners.forEach((listener) => listener(data));
+            }
+          }
+        } catch (err) {
+          console.error("Failed to decode binary update:", err);
         }
       };
     }
