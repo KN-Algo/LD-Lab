@@ -83,17 +83,6 @@ function Home() {
   );
 }
 
-function About() {
-  return (
-    <div className="p-10 bg-slate-50 min-h-screen">
-      <h1 className="text-2xl font-bold">O aplikacji</h1>
-      <Link to="/" className="text-blue-500 underline">
-        Wróć
-      </Link>
-    </div>
-  );
-}
-
 function Circle() {
   return (
     <div className="p-10 bg-slate-50 min-h-screen">

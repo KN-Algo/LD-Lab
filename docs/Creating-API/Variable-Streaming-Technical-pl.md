@@ -155,10 +155,6 @@ batchQueue.configure(
 );
 ```
 
-#### Debouncing na froncie (Usunięty)
-- Wcześniej stosowano opóźnienie 100ms dla operacji `setValue`
-- Zostało to usunięte w Fazie 3, ponieważ protokół binarny jest wystarczająco wydajny, aby obsłużyć natychmiastowe aktualizacje (np. z suwaka)
-
 ### Detekcja zmian wartości (Delta Tracking)
 
 Backend wyzwala notyfikacje tylko gdy wartość faktycznie się zmieni:
@@ -304,13 +300,6 @@ if (type == VariableType::INT) {
 3. Konkurencja mutex'ów przy wysokim obciążeniu pisania
 4. Wydajność wyszukiwania mapy z > 10,000 zmiennymi
 
-## Przyszłe ulepszenia
-
-### Rozważania fazy 4
-- Warstwa transportu WebSocket (jeśli Base64 okaże się niewystarczający)
-- Odporność na połączenie i logika ponownego połączenia
-- Filtrowanie i agregacja po stronie serwera
-- Dynamiczne dostosowywanie parametrów batchingu w zależności od obciążenia
 
 ## Zależności
 
