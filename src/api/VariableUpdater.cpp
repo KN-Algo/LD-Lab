@@ -3,6 +3,10 @@
 #include <chrono>
 #include <print>
 #include <numbers>
+#include <cmath>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 std::atomic<bool> VariableUpdater::running{false};
 std::thread VariableUpdater::thread;
@@ -46,7 +50,7 @@ void VariableUpdater::updateThread()
         variableTable.set("flag", VariableType::BOOL, flagValue);
 
         // Update temperature (sine wave between 10-30)
-        float temperature = 20.0f + 10.0f * std::sin(counter * std::numbers::pi_v<float> / 50.0f);
+        float temperature = 20.0f + 10.0f * std::sin(counter * static_cast<float>(M_PI) / 50.0f);
         variableTable.set("temperature", VariableType::FLOAT, temperature);
 
         if (counter % 20 == 0) {

@@ -1,5 +1,6 @@
 #include "api/streaming/DeltaTracker.h"
 #include <cmath>
+#include <mutex>
 
 namespace streaming {
 
