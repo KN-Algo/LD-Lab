@@ -1,0 +1,61 @@
+#include "api/VariableUpdater.h"
+#include "api/VariableTable.h"
+#include <chrono>
+#include <print>
+#include <numbers>
+#include <cmath>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+std::atomic<bool> VariableUpdater::running{false};
+std::thread VariableUpdater::thread;
+
+void VariableUpdater::start()
+{
+    if (running.exchange(true)) {
+        return;  // Already running
+    }
+
+    thread = std::thread(&VariableUpdater::updateThread);
+    std::println("[VariableUpdater] Background update thread started");
+}
+
+void VariableUpdater::stop()
+{
+    running = false;
+    if (thread.joinable()) {
+        thread.join();
+    }
+}
+
+void VariableUpdater::updateThread()
+{
+    auto& variableTable = VariableTable::getInstance();
+    int counter = 0;
+
+    while (running) {
+
+        /// UPDATE YOUR VARIABLES HERE
+        /// CODE BELOW IS JUST FOR DEMONSTRATION PURPOSES AND SHOULD NOT BE USED IN PRODUCTION CODE
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        // Update counter (0 to 100)
+        counter = (counter + 1) % 101;
+        variableTable.set("counter", VariableType::INT, counter);
+
+        // Toggle flag every 2 seconds
+        bool flagValue = (counter / 50) % 2 == 0;
+        variableTable.set("flag", VariableType::BOOL, flagValue);
+
+        // Update temperature (sine wave between 10-30)
+        float temperature = 20.0f + 10.0f * std::sin(counter * static_cast<float>(M_PI) / 50.0f);
+        variableTable.set("temperature", VariableType::FLOAT, temperature);
+
+        if (counter % 20 == 0) {
+            std::println("[VariableUpdater] Updated variables - counter: {}, flag: {}, temperature: {:.2f}",
+                       counter, flagValue, temperature);
+        }
+    }
+}

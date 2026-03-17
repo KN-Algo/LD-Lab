@@ -1,5 +1,7 @@
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { useGreeter, useAddNumbers, useAddMany } from "@/features/cpp-api/api";
+import { VariableMonitor } from "@/features/cpp-api/examples/VariableMonitor";
+import { CircleDemo } from "@/features/cpp-api/examples/CircleDemo";
 
 // TEN PONIŻSZY KOD JEST KODEM TYLKO DO ZAPREZENTOWANIA DZIAŁANIA SAUCERA - NIE JEST TO KOD, KTÓRY POWINIEN BYĆ APLIKACJI
 const Button = ({
@@ -72,17 +74,20 @@ function Home() {
         </div>
       </div>
 
-      <Link to="/about" className="text-blue-500 underline block mt-4">
-        O nas
+      <VariableMonitor />
+
+      <Link to="/circle" className="text-blue-500 underline block mt-2">
+        Circle Demo
       </Link>
     </div>
   );
 }
 
-function About() {
+function Circle() {
   return (
     <div className="p-10 bg-slate-50 min-h-screen">
-      <h1 className="text-2xl font-bold">O aplikacji</h1>
+      <h1 className="text-2xl font-bold">Circle Demo</h1>
+      <CircleDemo />
       <Link to="/" className="text-blue-500 underline">
         Wróć
       </Link>
@@ -97,7 +102,7 @@ function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/circle" element={<Circle />} />
       </Routes>
     </HashRouter>
   );

@@ -1,5 +1,12 @@
 # Jak dodać nowy moduł API
 
+## Dokumentacja
+
+- **[Variable Streaming - Poradnik Wykorzystania](./Variable-Streaming-Guide.md)** - Porady dotyczące implementacji zmiennych streamingowanych
+- **[Variable Streaming - Techniczna informacja](./Variable-Streaming-Technical.md)** - Techniczne szczegóły implementacji zmiennych streamingowanych
+
+---
+
 ## Backend (C++)
 
 ### 1. Utwórz header w folderze `include\<nazwa twojego modułu>` (np. `MyModule.h`)
