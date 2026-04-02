@@ -10,12 +10,12 @@ classDiagram
     }
 
     class MemoryMap {
-        -std::unordered_map~string, bool~ bools
-        -std::unordered_map~string, int~ ints
-        +getBool(address: string) bool
-        +setBool(address: string, value: bool) void
-        +getInt(address: string) int
-        +setInt(address: string, value: int) void
+        -std::unordered_map~std::string, bool~ bools
+        -std::unordered_map~std::string, int~ ints
+        +getBool(address: std::string) bool
+        +setBool(address: std::string, value: bool) void
+        +getInt(address: std::string) int
+        +setInt(address: std::string, value: int) void
     }
 
     class Contact {
