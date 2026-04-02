@@ -6,7 +6,7 @@ Poniżej znajduje się schemat klas (UML) naszego symulatora:
 classDiagram
     class VirtualElement {
         <<interface>>
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class MemoryMap {
@@ -21,53 +21,53 @@ classDiagram
     class Contact {
         -std::string address
         -ContactType type
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class Coil {
         -std::string address
         -CoilType type
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class Timer {
         -TimerType type
         -int presetTime
         -int elapsedTime
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class Counter {
         -CounterType type
         -int presetValue
         -int currentValue
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class Comparator {
         -std::string addressA
         -std::string addressB
         -CompType type
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class EdgeDetector {
         -std::string address
         -EdgeType type
         -bool previousState
-        +evaluate(powerFlow: bool, memory: MemoryMap) bool
+        +evaluate(powerFlow: bool, memory: MemoryMap&) bool
     }
 
     class Rung {
         -std::vector~std::vector~std::unique_ptr~VirtualElement~~~ elements
-        +evaluate(memory: MemoryMap) void
+        +evaluate(memory: MemoryMap&) void
     }
 
     class LadderDiagram {
         -std::vector~Rung~ rungs
         -MemoryMap memory
         +cycle() void
-        +getMemory() MemoryMap
+        +getMemory() MemoryMap&
     }
 
     class Parser {
