@@ -83,7 +83,7 @@ classDiagram
     VirtualElement <|-- EdgeDetector
 
     %% Relacje kompozycji i agregacji
-    Rung o-- VirtualElement : zawiera
+    Rung *-- VirtualElement : zawiera
     LadderDiagram o-- Rung : zawiera
     LadderDiagram *-- MemoryMap : posiada
     Parser ..> LadderDiagram : tworzy
