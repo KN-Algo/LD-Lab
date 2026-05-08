@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/VirtualElement.h"
+#include "core/engine/MemoryMap.h"
 
 #include <string>
 
@@ -13,7 +14,7 @@ enum class ContactType : int
 class Contact : public VirtualElement
 {
 public:
-    explicit Contact(std::string a, ContactType t); // jawny konstruktor przyjmujący typ styku - deklarować np. "Contact styk(NO);"
+    explicit Contact(std::string address, ContactType type); // jawny konstruktor przyjmujący typ styku - deklarować np. "Contact styk(NO);"
     bool evaluate(bool powerFlow, MemoryMap& memory) override;
 
 private:
