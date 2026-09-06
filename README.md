@@ -3,7 +3,7 @@
 [![KN Algo](https://img.shields.io/badge/Made%20by-KN%20Algo-000424?style=flat-square&logo=cplusplus)](https://algo.pwr.edu.pl/)
 [![PWr](https://img.shields.io/badge/Affiliation-PWr-red?style=flat-square)](https://pwr.edu.pl/)
 [![License](https://img.shields.io/badge/License-GPLv3-purple?style=flat-square)](./LICENSE)
-[![Status](https://img.shields.io/badge/Status-Development-orange?style=flat-square)]()
+[![Status](https://img.shields.io/badge/Status-Suspended-gray?style=flat-square)]()
 
 > Symulator języka drabinkowego (ang. Ladder Diagram, LD).
 
