@@ -114,3 +114,34 @@ frontend/node_modules/
 .vs/
 *.exe
 ```
+
+## Autosetup
+
+Budowanie i uruchamianie aplikacji tym skryptem zostało przetestowane na **Windows 11**. Wariant dla Fedory oczekuje na sprawdzenie.
+
+W głównym folderze projektu uruchom:
+
+```bash
+node build.mjs
+```
+
+Skrypt instaluje zależności frontendu (`npm ci`), buduje frontend, konfiguruje CMake, kompiluje aplikację w trybie **Release** i uruchamia LD-Lab. Nie trzeba osobno uruchamiać serwera Vite.
+
+Wymagane są **Node.js >=24**, **Git** i **CMake** dostępne w terminalu. CMake musi obsługiwać zainstalowaną wersję Visual Studio.
+
+- **Windows 11:** zainstaluj Visual Studio lub Visual Studio Build Tools z narzędziami **Desktop development with C++** i **Windows SDK**. Jeśli masz już Visual Studio bez narzędzi C++, skrypt spróbuje je doinstalować; Windows poprosi o uprawnienia administratora. Kompilacja korzysta z **MSVC**.
+- **Fedora:** zainstaluj zależności systemowe przed uruchomieniem skryptu:
+
+```bash
+sudo dnf install gcc-c++ cmake make git pkgconf-pkg-config gtk4-devel libadwaita-devel json-glib-devel webkitgtk6.0-devel
+```
+
+Pierwsze budowanie wymaga dostępu do Internetu do pobrania zależności.
+
+Aby tylko zbudować aplikację, bez uruchamiania:
+
+```bash
+node build.mjs --build-only
+```
+
+Gotową aplikację znajdziesz w `build/run-windows/Release/LD-Lab.exe` (Windows) lub `build/run-fedora/LD-Lab` (Fedora).
